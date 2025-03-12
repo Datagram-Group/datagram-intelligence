@@ -1,6 +1,6 @@
-package structure
+package models
 
-type Message struct {
+type Chat struct {
 	Model    string `json:"model"`
 	Messages []struct {
 		Role    string `json:"role"`
