@@ -10,23 +10,23 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-// CreateGRPCConnection tạo kết nối gRPC
+// CreateGRPCConnection creates a gRPC connection
 func CreateGRPCConnection(port string) (*grpc.ClientConn, chat.ChatServiceClient, error) {
 	llamaCityPort, err := strconv.Atoi(port)
 	if err != nil {
-		log.Fatalf("Lỗi khi chuyển đổi cổng: %v", err)
+		log.Fatalf("Error converting port: %v", err)
 	}
 
 	conn, err := grpc.NewClient(fmt.Sprintf("localhost:%d", llamaCityPort),
 		grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		return nil, nil, fmt.Errorf("không thể kết nối đến gRPC server: %v", err)
+		return nil, nil, fmt.Errorf("failed to connect to gRPC server: %v", err)
 	}
 	client := chat.NewChatServiceClient(conn)
 	return conn, client, nil
 }
 
-// CreateGRPCMessages tạo các message gRPC từ dữ liệu nhận được
+// CreateGRPCMessages creates gRPC messages from received data
 func CreateGRPCMessages(messages []struct {
 	Role    string `json:"role"`
 	Content string `json:"content"`

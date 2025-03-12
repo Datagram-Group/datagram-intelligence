@@ -31,21 +31,20 @@ func NewChatService(cfg *config.Config) ChatService {
 }
 
 func (svc *chatService) ChatQuestion(request ChatQuestionRequest) (map[string]interface{}, error) {
-	// Tạo context với timeout
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	// Kết nối đến gRPC server
+	// Connect to the gRPC server
 	conn, client, err := grpc.CreateGRPCConnection(svc.cfg.GRPC.LlamaCityPort)
 	if err != nil {
 		return nil, err
 	}
 	defer conn.Close()
 
-	// Tạo message gRPC
+	// Create gRPC message
 	messages := grpc.CreateGRPCMessages(request.Messages)
 
-	// Gửi yêu cầu gRPC
+	// Send gRPC request
 	_, err = client.SendMessage(ctx, &chat.ChatRequest{
 		Model:    request.Model,
 		Messages: messages,
@@ -54,7 +53,7 @@ func (svc *chatService) ChatQuestion(request ChatQuestionRequest) (map[string]in
 		return nil, err
 	}
 
-	// Chờ kết quả từ kênh
+	// Wait for the result from the channel
 	result := <-constant.ResultChan
 
 	var resultObject map[string]interface{}

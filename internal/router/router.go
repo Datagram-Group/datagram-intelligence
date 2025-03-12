@@ -23,7 +23,6 @@ func SetupRouter(
 	corsConfig.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
 	corsConfig.AllowCredentials = true
 
-	// Apply cors middleware
 	router.Use(cors.New(corsConfig))
 
 	apiGroup := router.Group("/api")

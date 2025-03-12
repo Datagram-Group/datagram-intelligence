@@ -8,44 +8,44 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"strconv" // Thêm package để chuyển đổi kiểu
+	"strconv"
 
 	"google.golang.org/grpc"
 )
 
-// Server định nghĩa server struct cho gRPC server
+// server defines the server struct for the gRPC server
 type server struct {
 	chat.UnimplementedChatServiceServer
 }
 
-// ReceiveOllamaResponse xử lý yêu cầu gRPC từ llama_citizen
+// ReceiveOllamaResponse processes the gRPC request from llama_citizen
 func (s *server) ReceiveOllamaResponse(ctx context.Context,
 	req *chat.OllamaResponseRequest) (*chat.OllamaResponse, error) {
-	// Gửi kết quả cho kênh
+	// Send the result to the channel
 	constant.ResultChan <- req.Response
 
-	// Trả về phản hồi thành công
+	// Return a successful response
 	return &chat.OllamaResponse{Response: "received successfully"}, nil
 }
 
-// StartGRPCServer khởi tạo gRPC server
+// StartGRPCServer initializes the gRPC server
 func StartGRPCServer(config *config.Config) {
-	// Chuyển đổi ServerPort từ string sang int
+	// Convert ServerPort from string to int
 	serverPort, err := strconv.Atoi(config.GRPC.ServerPort)
 	if err != nil {
-		log.Fatalf("Lỗi khi chuyển đổi cổng: %v", err)
+		log.Fatalf("Error converting port: %v", err)
 	}
 
 	grpcServer := grpc.NewServer()
 	chat.RegisterChatServiceServer(grpcServer, &server{})
 
-	// Lắng nghe cổng từ cấu hình
+	// Listen on the port from the configuration
 	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", serverPort))
 	if err != nil {
-		log.Fatalf("Không thể nghe trên cổng %d: %v", serverPort, err)
+		log.Fatalf("Could not listen on port %d: %v", serverPort, err)
 	}
-	fmt.Printf("Server đang chạy trên cổng %d...\n", serverPort)
+	fmt.Printf("Server is running on port %d...\n", serverPort)
 	if err := grpcServer.Serve(listener); err != nil {
-		log.Fatalf("Không thể phục vụ gRPC: %v", err)
+		log.Fatalf("Could not serve gRPC: %v", err)
 	}
 }
