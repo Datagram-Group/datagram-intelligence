@@ -7,12 +7,16 @@ import (
 	"datagram-intelligence/internal/service"
 	"datagram-intelligence/pkg/grpc"
 	"datagram-intelligence/pkg/validator"
+	"flag"
 	"log"
 )
 
 func main() {
-	// Load configuration
-	cfg, err := config.LoadConfig("../config.yaml")
+	configPath := flag.String("config", "../config.yaml", "Path to the config file")
+
+	flag.Parse()
+
+	cfg, err := config.LoadConfig(*configPath)
 	if err != nil {
 		log.Fatal("Failed to load config: ", err)
 	}
