@@ -17,7 +17,7 @@ func CreateGRPCConnection(port string) (*grpc.ClientConn, chat.ChatServiceClient
 		log.Fatalf("Error converting port: %v", err)
 	}
 
-	conn, err := grpc.NewClient(fmt.Sprintf("localhost:%d", llamaCityPort),
+	conn, err := grpc.NewClient(fmt.Sprintf("llama-city:%d", llamaCityPort),
 		grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to connect to gRPC server: %v", err)
