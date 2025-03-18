@@ -7,6 +7,7 @@ import (
 	"datagram-intelligence/pkg/grpc"
 	chat "datagram-intelligence/proto"
 	"encoding/json"
+	"fmt"
 	"time"
 )
 
@@ -45,13 +46,14 @@ func (svc *chatService) ChatQuestion(request ChatQuestionRequest) (map[string]in
 	messages := grpc.CreateGRPCMessages(request.Messages)
 
 	// Send gRPC request
-	_, err = client.SendMessage(ctx, &chat.ChatRequest{
+	response, err := client.SendMessage(ctx, &chat.ChatRequest{
 		Model:    request.Model,
 		Messages: messages,
 	})
 	if err != nil {
 		return nil, err
 	}
+	fmt.Printf("Received ACK from city: %s\n", response.AckMessage)
 
 	// Wait for the result from the channel
 	result := <-constant.ResultChan
