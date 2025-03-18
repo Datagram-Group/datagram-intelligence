@@ -55,13 +55,16 @@ func (svc *chatService) ChatQuestion(request ChatQuestionRequest) (map[string]in
 	}
 	fmt.Printf("Received ACK from city: %s\n", response.AckMessage)
 
-	// Wait for the result from the channel
-	result := <-constant.ResultChan
-
-	var resultObject map[string]interface{}
-	if err := json.Unmarshal([]byte(result), &resultObject); err != nil {
-		return nil, err
+	// Wait for the result from the channel with a 30-second timeout
+	select {
+	case result := <-constant.ResultChan:
+		var resultObject map[string]interface{}
+		if err := json.Unmarshal([]byte(result), &resultObject); err != nil {
+			return nil, err
+		}
+		return resultObject, nil
+	case <-time.After(30 * time.Second):
+		// If 30 seconds pass without receiving a result
+		return nil, fmt.Errorf("something wrong, please try")
 	}
-
-	return resultObject, nil
 }
