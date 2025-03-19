@@ -36,7 +36,7 @@ func (svc *chatService) ChatQuestion(request ChatQuestionRequest) (map[string]in
 	defer cancel()
 
 	// Connect to the gRPC server
-	conn, client, err := grpc.CreateGRPCConnection(svc.cfg.GRPC.LlamaCityPort)
+	conn, client, err := grpc.CreateGRPCConnection(svc.cfg.GRPC.LlamaCityIP, svc.cfg.GRPC.LlamaCityPort)
 	if err != nil {
 		return nil, err
 	}

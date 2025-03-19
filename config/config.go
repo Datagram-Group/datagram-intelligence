@@ -12,6 +12,7 @@ type HTTPServerConfig struct {
 }
 
 type GRPCConfig struct {
+	LlamaCityIP   string
 	LlamaCityPort string
 	ServerPort    string
 }

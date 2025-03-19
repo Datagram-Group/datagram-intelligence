@@ -11,13 +11,13 @@ import (
 )
 
 // CreateGRPCConnection creates a gRPC connection
-func CreateGRPCConnection(port string) (*grpc.ClientConn, chat.ChatServiceClient, error) {
+func CreateGRPCConnection(ip, port string) (*grpc.ClientConn, chat.ChatServiceClient, error) {
 	llamaCityPort, err := strconv.Atoi(port)
 	if err != nil {
 		log.Fatalf("Error converting port: %v", err)
 	}
 
-	conn, err := grpc.NewClient(fmt.Sprintf("llama-city:%d", llamaCityPort),
+	conn, err := grpc.NewClient(fmt.Sprintf("%s:%d", ip, llamaCityPort),
 		grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to connect to gRPC server: %v", err)
