@@ -3,6 +3,6 @@ HTTPServer:
   Port: ":3000"
 
 GRPC:
-  LlamaCityIP: "localhost"
+  LlamaCityIP: "llama-city"
   LlamaCityPort: "50051"
   ServerPort: "50052"
