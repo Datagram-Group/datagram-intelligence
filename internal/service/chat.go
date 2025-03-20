@@ -55,7 +55,6 @@ func (svc *chatService) ChatQuestion(request ChatQuestionRequest) (map[string]in
 	}
 	fmt.Printf("Received ACK from city: %s\n", response.AckMessage)
 
-	// Wait for the result from the channel with a 30-second timeout
 	select {
 	case result := <-constant.ResultChan:
 		var resultObject map[string]interface{}

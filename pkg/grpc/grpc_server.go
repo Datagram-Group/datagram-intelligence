@@ -24,13 +24,11 @@ func (s *server) ReceiveOllamaResponse(ctx context.Context,
 	// Send the result to the channel
 	constant.ResultChan <- req.Response
 
-	// Return a successful response
 	return &chat.OllamaResponse{Response: "received successfully"}, nil
 }
 
 // StartGRPCServer initializes the gRPC server
 func StartGRPCServer(config *config.Config) {
-	// Convert ServerPort from string to int
 	serverPort, err := strconv.Atoi(config.GRPC.ServerPort)
 	if err != nil {
 		log.Fatalf("Error converting port: %v", err)
