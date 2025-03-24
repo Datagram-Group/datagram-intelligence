@@ -11,3 +11,4 @@ imgs
 build.sh
 /bak
 /build
+Makefile
